@@ -3,15 +3,16 @@ package flowserver
 import (
 	"encoding/json"
 	"errors"
-	"flow"
-	"flow/flowserver/flowmsg"
-	"flow/registry"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
 	"sync"
+
+	"github.com/hexasoftware/flow"
+	"github.com/hexasoftware/flow/flowserver/flowmsg"
+	"github.com/hexasoftware/flow/registry"
 
 	"github.com/gorilla/websocket"
 )

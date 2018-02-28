@@ -3,13 +3,14 @@ package flowbuilder
 import (
 	"encoding/json"
 	"errors"
-	"flow"
-	"flow/registry"
 	"fmt"
 	"log"
 	"reflect"
 	"strconv"
 	"time"
+
+	"github.com/hexasoftware/flow"
+	"github.com/hexasoftware/flow/registry"
 )
 
 // ErrLoop loop error
