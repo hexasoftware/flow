@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 
+	"github.com/hexasoftware/flow/flowserver/flowuiassets"
 	"github.com/hexasoftware/flow/registry"
 
 	"github.com/gohxs/prettylog"
@@ -44,7 +45,9 @@ func New(r *registry.R, store string) *FlowServer {
 		rp.ErrorLog = prettylog.New("rproxy")
 		staticHandler = rp
 	} else {
-		staticHandler = webu.StaticHandler("web", "index.html")
+		//staticHandler = webu.StaticHandler("web", "index.html")
+		staticHandler = webu.MapHandler(flowuiassets.Data, "index.html")
+		//staticHandler = flowuiassets.AssetHandleFunc
 	}
 
 	/*mux := http.NewServeMux()

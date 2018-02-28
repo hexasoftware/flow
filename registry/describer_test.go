@@ -1,11 +1,11 @@
 package registry_test
 
 import (
-	"flow/registry"
 	"strings"
 	"testing"
 
 	"github.com/hexasoftware/flow/internal/assert"
+	"github.com/hexasoftware/flow/registry"
 )
 
 func TestMakeBatch(t *testing.T) {

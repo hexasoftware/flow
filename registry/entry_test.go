@@ -1,10 +1,10 @@
 package registry_test
 
 import (
-	"flow/registry"
 	"testing"
 
 	"github.com/hexasoftware/flow/internal/assert"
+	"github.com/hexasoftware/flow/registry"
 )
 
 func TestNewEntryInvalid(t *testing.T) {
