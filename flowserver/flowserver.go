@@ -45,6 +45,7 @@ func New(r *registry.R, store string) *FlowServer {
 		rp.ErrorLog = prettylog.New("rproxy")
 		staticHandler = rp
 	} else {
+		// Check folder web?
 		//staticHandler = webu.StaticHandler("web", "index.html")
 		staticHandler = webu.MapHandler(flowuiassets.Data, "index.html")
 		//staticHandler = flowuiassets.AssetHandleFunc
