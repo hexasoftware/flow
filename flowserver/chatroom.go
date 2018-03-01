@@ -5,8 +5,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hexasoftware/flow/flowserver/flowmsg"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -45,7 +43,7 @@ func (r *ChatRoom) ClientAdd(c *websocket.Conn, handle string) error {
 	r.broadcastClientList()
 
 	for _, ev := range r.Events {
-		if err := c.WriteJSON(flowmsg.SendMessage{OP: "chatEvent", Data: ev}); err != nil {
+		if err := c.WriteJSON(SendMessage{OP: "chatEvent", Data: ev}); err != nil {
 			return err
 		}
 	}
@@ -98,7 +96,7 @@ func (r *ChatRoom) Event(cl *websocket.Conn, v interface{}) error {
 	r.Events = append(r.Events, v)
 
 	// Every one including self
-	return r.broadcast(nil, flowmsg.SendMessage{OP: "chatEvent", Data: v})
+	return r.broadcast(nil, SendMessage{OP: "chatEvent", Data: v})
 }
 
 func (r *ChatRoom) broadcast(c *websocket.Conn, v interface{}) error {
@@ -120,5 +118,5 @@ func (r *ChatRoom) broadcastClientList() error {
 		clients[i] = cl.Handle
 	}
 
-	return r.broadcast(nil, flowmsg.SendMessage{OP: "chatUserList", Data: clients})
+	return r.broadcast(nil, SendMessage{OP: "chatUserList", Data: clients})
 }
