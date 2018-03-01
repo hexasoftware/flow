@@ -13,7 +13,6 @@ import (
 
 	"github.com/hexasoftware/flow"
 	"github.com/hexasoftware/flow/flowserver/flowbuilder"
-	"github.com/hexasoftware/flow/flowserver/flowmsg"
 
 	"github.com/gorilla/websocket"
 )
@@ -84,7 +83,7 @@ func NewSession(fsm *FlowSessionManager, ID string) *FlowSession {
 func (s *FlowSession) ClientAdd(c *websocket.Conn) error {
 	s.Lock()
 	defer s.Unlock()
-	err := c.WriteJSON(flowmsg.SendMessage{OP: "sessionJoin", ID: s.ID})
+	err := c.WriteJSON(SendMessage{OP: "sessionJoin", ID: s.ID})
 	if err != nil {
 		return err
 	}
@@ -92,7 +91,7 @@ func (s *FlowSession) ClientAdd(c *websocket.Conn) error {
 	if err != nil {
 		return err
 	}
-	err = c.WriteJSON(flowmsg.SendMessage{OP: "registry", Data: desc})
+	err = c.WriteJSON(SendMessage{OP: "registry", Data: desc})
 	if err != nil {
 		return err
 	}
@@ -101,7 +100,7 @@ func (s *FlowSession) ClientAdd(c *websocket.Conn) error {
 	if len(s.RawDoc) == 0 {
 		return nil
 	}
-	err = c.WriteJSON(flowmsg.SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
+	err = c.WriteJSON(SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
 	if err != nil {
 		return err
 	}
@@ -142,7 +141,7 @@ func (s *FlowSession) DocumentUpdate(c *websocket.Conn, data []byte) error {
 	s.RawDoc = make([]byte, len(data))
 	copy(s.RawDoc, data)
 
-	return s.broadcast(c, flowmsg.SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
+	return s.broadcast(c, SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
 }
 
 // DocumentSave persist document in a file
@@ -166,7 +165,7 @@ func (s *FlowSession) DocumentSave(data []byte) error {
 	}
 
 	s.notify("Session saved")
-	return s.broadcast(nil, flowmsg.SendMessage{OP: "documentSave", Data: "saved"})
+	return s.broadcast(nil, SendMessage{OP: "documentSave", Data: "saved"})
 }
 
 // Document send document to client c
@@ -174,7 +173,7 @@ func (s *FlowSession) Document(c *websocket.Conn) error {
 	s.Lock()
 	defer s.Unlock()
 
-	return c.WriteJSON(flowmsg.SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
+	return c.WriteJSON(SendMessage{OP: "document", Data: json.RawMessage(s.RawDoc)})
 }
 
 // NodeProcess a node triggering results
@@ -438,9 +437,9 @@ func (s *FlowSession) NodeTrain(c *websocket.Conn, data []byte) error {
 
 }
 
-func (s *FlowSession) activity() *flowmsg.SendMessage {
+func (s *FlowSession) activity() *SendMessage {
 
-	msg := flowmsg.SendMessage{OP: "nodeActivity",
+	msg := SendMessage{OP: "nodeActivity",
 		Data: map[string]interface{}{
 			"serverTime": time.Now(),
 			"nodes":      s.nodeActivity,
@@ -458,12 +457,12 @@ func (s *FlowSession) Notify(v interface{}) error {
 }
 
 func (s *FlowSession) notify(v interface{}) error {
-	return s.broadcast(nil, flowmsg.SendMessage{OP: "sessionNotify", Data: v})
+	return s.broadcast(nil, SendMessage{OP: "sessionNotify", Data: v})
 }
 
 // Write io.Writer implementation to send event logging
 func (s *FlowSession) Write(data []byte) (int, error) {
-	err := s.Broadcast(nil, flowmsg.SendMessage{OP: "sessionLog", Data: string(data)})
+	err := s.Broadcast(nil, SendMessage{OP: "sessionLog", Data: string(data)})
 	if err != nil {
 		return -1, err
 	}

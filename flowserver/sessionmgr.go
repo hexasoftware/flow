@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"github.com/hexasoftware/flow"
-	"github.com/hexasoftware/flow/flowserver/flowmsg"
 	"github.com/hexasoftware/flow/registry"
 
 	"github.com/gorilla/websocket"
@@ -107,7 +106,7 @@ func (fsm *FlowSessionManager) ServeHTTP(w http.ResponseWriter, r *http.Request)
 			break
 		}
 
-		m := flowmsg.RecvMessage{}
+		m := RecvMessage{}
 		err = json.Unmarshal(data, &m)
 		if e(err) {
 			log.Println("Err parsing message:", err)
@@ -160,7 +159,7 @@ func (fsm *FlowSessionManager) ServeHTTP(w http.ResponseWriter, r *http.Request)
 				if sess == nil {
 					return errors.New("nodeUpdate: invalid session")
 				}
-				return sess.Broadcast(c, flowmsg.SendMessage{OP: m.OP, Data: m.Data})
+				return sess.Broadcast(c, SendMessage{OP: m.OP, Data: m.Data})
 			case "nodeProcess":
 				if sess == nil {
 					return errors.New("nodeRun: invalid session")

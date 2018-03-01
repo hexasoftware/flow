@@ -1,4 +1,4 @@
-package flowmsg
+package flowserver
 
 import "encoding/json"
 
@@ -9,7 +9,7 @@ type RecvMessage struct {
 	Data json.RawMessage `json:"data"`
 }
 
-// SendMessage
+//SendMessage
 type SendMessage struct {
 	OP   string      `json:"op"`
 	ID   string      `json:"id"`
